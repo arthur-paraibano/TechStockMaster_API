@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
@@ -16,6 +15,9 @@ public class ApiApplication {
      * @param args
      */
     public static void main(String[] args) {
-        SpringApplication.run(ApiApplication.class, args);
+//        SpringApplication.run(ApiApplication.class, args);
+        SpringApplication app = new SpringApplication(ApiApplication.class);
+        app.setAdditionalProfiles(System.getenv("SPRING_PROFILES_ACTIVE"));
+        app.run(args);
     }
 }
