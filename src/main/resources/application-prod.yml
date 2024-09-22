@@ -18,10 +18,6 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
 
-  doc:
-    swagger-ui:
-      path: /doc.html
-
 security:
   config:
     prefix: Bearer
