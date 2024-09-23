@@ -7,6 +7,11 @@ spring:
     username: root
     password: 616853
 
+    url_Lykos: jdbc:mysql://${LYKOSHOST}:${LYKOSPORT}/${LYKOSDATABASE}?allowPublicKeyRetrieval=true&useSSL=false
+    username_Lykos: ${LYKOSUSER}
+    password_Lykos: ${LYKOSPASSWORD}
+    update: tre
+
   doc:
     swagger-ui:
       path: /doc.html

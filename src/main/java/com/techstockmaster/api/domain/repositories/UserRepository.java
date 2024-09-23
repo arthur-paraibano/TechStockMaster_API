@@ -24,6 +24,4 @@ public interface UserRepository extends JpaRepository<UserModel, Integer> {
 
     @Query("SELECT u FROM UserModel u WHERE u.fullName LIKE %:name%")
     List<UserModel> filtraProNome(@Param("name") String name);
-
-
 }

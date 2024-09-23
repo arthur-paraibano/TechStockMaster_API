@@ -18,7 +18,7 @@ import java.time.LocalDate;
         @UniqueConstraint(columnNames = "abrev_tag"),
         @UniqueConstraint(columnNames = "descTag")
 })
-public class TagModal extends RepresentationModel<TagModal> implements Serializable {
+public class TagModel extends RepresentationModel<TagModel> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

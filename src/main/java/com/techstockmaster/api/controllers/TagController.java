@@ -2,7 +2,7 @@ package com.techstockmaster.api.controllers;
 
 import com.techstockmaster.api.controllers.dtos.TagDto;
 import com.techstockmaster.api.controllers.dtos.TagUpdateDto;
-import com.techstockmaster.api.domain.models.TagModal;
+import com.techstockmaster.api.domain.models.TagModel;
 import com.techstockmaster.api.services.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,10 +46,10 @@ public class TagController {
             @ApiResponse(responseCode = "404", description = "Nenhum Tag encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public ResponseEntity<List<TagModal>> getAllTag() {
-        List<TagModal> models = service.findAll();
+    public ResponseEntity<List<TagModel>> getAllTag() {
+        List<TagModel> models = service.findAll();
         if (!models.isEmpty()) {
-            for (TagModal list : models) {
+            for (TagModel list : models) {
                 Integer id = list.getId();
                 list.add(linkTo(methodOn(TagController.class).getTagById(id)).withSelfRel());
             }
@@ -67,8 +67,8 @@ public class TagController {
             @ApiResponse(responseCode = "404", description = "Tag não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public ResponseEntity<TagModal> getTagById(@PathVariable Integer id) {
-        TagModal obj = service.findById(id);
+    public ResponseEntity<TagModel> getTagById(@PathVariable Integer id) {
+        TagModel obj = service.findById(id);
         if (obj != null) {
             obj.add(linkTo(methodOn(TagController.class).getAllTag()).withRel("Tag List"));
             return ResponseEntity.status(HttpStatus.OK).body(obj);
@@ -89,7 +89,7 @@ public class TagController {
     })
     public ResponseEntity<Object> createTag(@Validated @RequestBody TagDto dto) {
         try {
-            TagModal createdTag = service.create(dto);
+            TagModel createdTag = service.create(dto);
             createdTag
                     .add(linkTo(methodOn(TagController.class).getTagById(createdTag.getId()))
                             .withSelfRel());
@@ -111,7 +111,7 @@ public class TagController {
     })
     public ResponseEntity<String> deleteTag(@PathVariable Integer id) {
         try {
-            TagModal model = service.delete(id);
+            TagModel model = service.delete(id);
             if (model != null) {
                 return ResponseEntity.status(HttpStatus.OK).body("Tag deletado com sucesso.");
             } else {
@@ -132,7 +132,7 @@ public class TagController {
     public ResponseEntity<Object> updateTag(@PathVariable Integer id,
                                             @Validated @RequestBody TagUpdateDto dto) {
         try {
-            TagModal update = service.updateTag(id, dto);
+            TagModel update = service.updateTag(id, dto);
             if (update == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tag não encontrado.");
             }

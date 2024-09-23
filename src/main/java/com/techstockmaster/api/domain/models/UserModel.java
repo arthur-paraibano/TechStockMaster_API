@@ -7,8 +7,10 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "usernames", uniqueConstraints = { // A anotação @UniqueConstraint é usada para garantir que uma ou mais
         // colunas tenham valores únicos na tabela
@@ -24,35 +26,37 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(name = "id")
     private Integer id;
 
-    @Setter
     @Column(name = "full_name", length = 200, nullable = false)
     private String fullName;
 
-    @Setter
     @Column(name = "gmail", nullable = false)
     private String gmail;
 
-    @Setter
     @Column(name = "username", nullable = false)
     private String username;
 
-    @Setter
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Setter
     @Column(name = "full_access", nullable = false)
     private String fullAccess;
 
-    @Setter
     @Column(name = "user_type", nullable = false)
     private String userType;
 
-    @Setter
     @Column(name = "temporary_password", nullable = false)
     private boolean temporaryPassword;
 
-    @Setter
     @Column(name = "blocked")
     private String blocked;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedbackModel> feedbackModels;
+
+    public UserModel() {
+    }
+
+    public UserModel(Integer id) {
+        this.id = id;
+    }
 }
