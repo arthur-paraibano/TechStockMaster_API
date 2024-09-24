@@ -8,13 +8,12 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "feedback")
-public class FeedbackModel extends RepresentationModel<FeedbackModel> implements Serializable {
+@Table(name = "setor")
+public class SectorModal extends RepresentationModel<FeedbackModel> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -23,18 +22,14 @@ public class FeedbackModel extends RepresentationModel<FeedbackModel> implements
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "data")
-    @Temporal(TemporalType.DATE)
-    private LocalDate date;
+    @Column(name = "nome", length = 255)
+    private String name;
 
-    @Column(name = "descricao", length = 255)
-    private String descricao;
-
-    @Column(name = "status", length = 50)
-    private String status;
+    @Column(name = "LOCACAO", length = 255)
+    private String retal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_userid", nullable = false)
+    @JoinColumn(name = "FK_SUPERVISOR", nullable = false)
     @JsonManagedReference
-    private UserModel user;
+    private SupervisorModel supervisor;
 }

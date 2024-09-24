@@ -1,11 +1,8 @@
 package com.techstockmaster.api.controllers;
 
-import com.techstockmaster.api.controllers.dtos.UserDto;
-import com.techstockmaster.api.controllers.dtos.UserPasswordDto;
+import com.techstockmaster.api.controllers.dtos.FeedbackDto;
 import com.techstockmaster.api.domain.models.FeedbackModel;
-import com.techstockmaster.api.domain.models.UserModel;
 import com.techstockmaster.api.services.FeedbackService;
-import com.techstockmaster.api.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -50,7 +47,7 @@ public class FeedbackController {
         if (!usersList.isEmpty()) {
             for (FeedbackModel user : usersList) {
                 Integer id = user.getId();
-                user.add(linkTo(methodOn(FeedbackController.class).getById(id)).withSelfRel());
+                user.add(linkTo(methodOn(FeedbackController.class).getById(user.getId())).withSelfRel());
             }
             return ResponseEntity.status(HttpStatus.OK).body(usersList);
         } else {
@@ -68,10 +65,27 @@ public class FeedbackController {
     public ResponseEntity<FeedbackModel> getById(@PathVariable Integer id) {
         FeedbackModel user = service.findById(id);
         if (user != null) {
-           user.add(linkTo(methodOn(FeedbackController.class).getAll()).withRel("Feedback List"));
+            user.add(linkTo(methodOn(FeedbackController.class).getAll()).withRel("All Feedbacks"));
             return ResponseEntity.status(HttpStatus.OK).body(user);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/add")
+    @Operation(summary = "Adicionar um novo feedback", description = "Cria um novo feedback")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Feedback criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Object> add(@Validated @RequestBody FeedbackDto dto) {
+        try {
+            FeedbackModel newFeedback = service.create(dto);
+            newFeedback.add(linkTo(methodOn(FeedbackController.class).getAll()).withRel("All Feedbacks"));
+            return ResponseEntity.status(HttpStatus.CREATED).body(newFeedback);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

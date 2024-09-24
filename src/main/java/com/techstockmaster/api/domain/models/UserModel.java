@@ -1,5 +1,6 @@
 package com.techstockmaster.api.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,13 +51,10 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(name = "blocked")
     private String blocked;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<FeedbackModel> feedbackModels;
 
     public UserModel() {
-    }
-
-    public UserModel(Integer id) {
-        this.id = id;
     }
 }
