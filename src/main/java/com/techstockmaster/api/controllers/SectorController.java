@@ -1,18 +1,18 @@
 package com.techstockmaster.api.controllers;
 
-import com.techstockmaster.api.domain.models.SectorModal;
+import com.techstockmaster.api.controllers.dtos.SectorDto;
+import com.techstockmaster.api.domain.models.SectorModel;
 import com.techstockmaster.api.services.SectorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,10 +40,10 @@ public class SectorController {
             @ApiResponse(responseCode = "200", description = "Setores encontrados"),
             @ApiResponse(responseCode = "404", description = "Nenhum Setor encontrado")
     })
-    public ResponseEntity<List<SectorModal>> getAll() {
-        List<SectorModal> usersList = service.findAll();
+    public ResponseEntity<List<SectorModel>> getAll() {
+        List<SectorModel> usersList = service.findAll();
         if (!usersList.isEmpty()) {
-            for (SectorModal user : usersList) {
+            for (SectorModel user : usersList) {
                 Integer id = user.getId();
                 user.add(linkTo(methodOn(SectorController.class).getById(user.getId())).withSelfRel());
             }
@@ -59,13 +59,30 @@ public class SectorController {
             @ApiResponse(responseCode = "200", description = "Setor encontrado"),
             @ApiResponse(responseCode = "404", description = "Setor não encontrado")
     })
-    public ResponseEntity<SectorModal> getById(@PathVariable Integer id) {
-        SectorModal user = service.findById(id);
+    public ResponseEntity<SectorModel> getById(@PathVariable Integer id) {
+        SectorModel user = service.findById(id);
         if (user != null) {
             user.add(linkTo(methodOn(SectorController.class).getAll()).withRel("All Feedbacks"));
             return ResponseEntity.status(HttpStatus.OK).body(user);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/add")
+    @Operation(summary = "Adicionar um novo Setor", description = "Cria um novo Setor")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Setor criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<Object> add(@Validated @RequestBody SectorDto dto) {
+        try {
+            SectorModel modal = service.create(dto);
+            modal.add(linkTo(methodOn(FeedbackController.class).getAll()).withRel("All Feedbacks"));
+            return ResponseEntity.status(HttpStatus.CREATED).body(modal);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.techstockmaster.api.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,12 +11,14 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "setor")
-public class SectorModal extends RepresentationModel<FeedbackModel> implements Serializable {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class SectorModel extends RepresentationModel<FeedbackModel> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

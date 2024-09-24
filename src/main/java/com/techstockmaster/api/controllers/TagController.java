@@ -129,6 +129,13 @@ public class TagController {
      * Atualizar descrição da Tag
      */
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar a descriçao da TAG", description = "Atualiza uma Tag específica pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tag atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Tag não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public ResponseEntity<Object> updateTag(@PathVariable Integer id,
                                             @Validated @RequestBody TagUpdateDto dto) {
         try {

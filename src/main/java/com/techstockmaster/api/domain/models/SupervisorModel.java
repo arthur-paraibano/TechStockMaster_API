@@ -1,6 +1,7 @@
 package com.techstockmaster.api.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @Getter
 @Table(name = "supervisor")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SupervisorModel extends RepresentationModel<SupervisorModel> implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -28,5 +30,5 @@ public class SupervisorModel extends RepresentationModel<SupervisorModel> implem
 
     @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
-    private List<SectorModal> sectorModals;
+    private List<SectorModel> sectorModels;
 }
