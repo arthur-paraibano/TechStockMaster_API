@@ -16,12 +16,12 @@ public class DatabaseLykos {
 
     @Autowired
     @Qualifier("dataSourceLykos")
-    private DataSource dataSource;
+    private static DataSource dataSource;
 
-    private Connection connection;
+    private static Connection connection;
 
     // check database connection
-    public Connection getConnection() {
+    public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = dataSource.getConnection();
@@ -36,7 +36,7 @@ public class DatabaseLykos {
         closeConnection(connection);
     }
 
-    public void closeConnection(Connection con) {
+    public static void closeConnection(Connection con) {
         try {
             if (con != null) {
                 con.close();
@@ -47,7 +47,7 @@ public class DatabaseLykos {
         }
     }
 
-    public void closeConnection(Connection con, PreparedStatement stmt) {
+    public static void closeConnection(Connection con, PreparedStatement stmt) {
         closeConnection(con);
         try {
             if (stmt != null) {
@@ -59,7 +59,7 @@ public class DatabaseLykos {
         }
     }
 
-    public void closeConnection(Connection con, PreparedStatement stmt, ResultSet rs) {
+    public static void closeConnection(Connection con, PreparedStatement stmt, ResultSet rs) {
         closeConnection(con, stmt);
         try {
             if (rs != null) {

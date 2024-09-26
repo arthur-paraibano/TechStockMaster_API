@@ -10,10 +10,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @OpenAPIDefinition(servers = {@Server(url = "/", description = "Default Server URL")})
 @SpringBootApplication(scanBasePackages = "com.techstockmaster.api")
 public class ApiApplication {
-
-    /**
-     * @param args
-     */
     public static void main(String[] args) {
 //        SpringApplication.run(ApiApplication.class, args);
         SpringApplication app = new SpringApplication(ApiApplication.class);
