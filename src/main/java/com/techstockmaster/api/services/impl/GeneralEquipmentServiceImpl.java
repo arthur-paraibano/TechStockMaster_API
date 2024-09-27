@@ -40,8 +40,8 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
     }
 
     @Override
-    public GeneralEquipmentModal findById(Integer integer) {
-        Optional<GeneralEquipmentModal> entity = repository.findById(integer);
+    public GeneralEquipmentModal findById(Integer id) {
+        Optional<GeneralEquipmentModal> entity = repository.findById(id);
         return entity.orElse(null);
     }
 

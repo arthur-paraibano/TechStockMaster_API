@@ -1,6 +1,7 @@
 package com.techstockmaster.api.controllers;
 
 import com.techstockmaster.api.domain.models.GeneralEquipmentModal;
+import com.techstockmaster.api.domain.models.SupervisorModel;
 import com.techstockmaster.api.services.GeneralEquipmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,18 +58,13 @@ public class GeneralEquipmentController {
             @ApiResponse(responseCode = "404", description = "Equipamento não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<GeneralEquipmentModal> getById(Integer id) {
-        try {
-            GeneralEquipmentModal equipment = service.findById(id);
-            if (equipment != null) {
-                equipment.add(linkTo(methodOn(GeneralEquipmentController.class).getAll()).withRel("All General Equipment"));
-                return ResponseEntity.status(HttpStatus.OK).body(equipment);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    public ResponseEntity<GeneralEquipmentModal> getById(@PathVariable Integer id) {
+        GeneralEquipmentModal obj = service.findById(id);
+        if (obj != null) {
+            obj.add(linkTo(methodOn(GeneralEquipmentController.class).getAll()).withRel("Supervisor List"));
+            return ResponseEntity.status(HttpStatus.OK).body(obj);
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/add")
