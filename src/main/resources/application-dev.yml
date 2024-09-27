@@ -3,14 +3,14 @@ spring:
     name: techstockmaster_api
 
   datasource:
-    url: jdbc:mysql://localhost:3306/bd_estoque?allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: 616853
-
-    url_Lykos: jdbc:mysql://${LYKOSHOST}:${LYKOSPORT}/${LYKOSDATABASE}?allowPublicKeyRetrieval=true&useSSL=false
-    username_Lykos: ${LYKOSUSER}
-    password_Lykos: ${LYKOSPASSWORD}
-    update: tre
+    local:
+      url: jdbc:mysql://localhost:3306/bd_estoque?allowPublicKeyRetrieval=true&useSSL=false
+      username: root
+      password: 616853
+    lykos:
+      url: jdbc:mysql://${LYKOSHOST}:${LYKOSPORT}/${LYKOSDATABASE}?allowPublicKeyRetrieval=true&useSSL=false
+      username: ${LYKOSUSER}
+      password: ${LYKOSPASSWORD}
 
   doc:
     swagger-ui:
