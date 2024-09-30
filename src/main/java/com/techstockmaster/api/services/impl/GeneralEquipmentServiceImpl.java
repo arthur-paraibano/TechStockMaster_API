@@ -1,7 +1,7 @@
 package com.techstockmaster.api.services.impl;
 
 import com.techstockmaster.api.controllers.dtos.GeneralEquipmentDto;
-import com.techstockmaster.api.domain.models.GeneralEquipmentModal;
+import com.techstockmaster.api.domain.models.GeneralEquipmentModel;
 import com.techstockmaster.api.domain.repositories.GeneralEquipmentRepository;
 import com.techstockmaster.api.services.GeneralEquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,46 +35,46 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
     }
 
     @Override
-    public List<GeneralEquipmentModal> findAll() {
+    public List<GeneralEquipmentModel> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public GeneralEquipmentModal findById(Integer id) {
-        Optional<GeneralEquipmentModal> entity = repository.findById(id);
+    public GeneralEquipmentModel findById(Integer id) {
+        Optional<GeneralEquipmentModel> entity = repository.findById(id);
         return entity.orElse(null);
     }
 
     @Override
-    public GeneralEquipmentModal create(GeneralEquipmentDto entity) {
+    public GeneralEquipmentModel create(GeneralEquipmentDto entity) {
         return null;
     }
 
     @Override
-    public GeneralEquipmentModal delete(Integer integer) {
+    public GeneralEquipmentModel delete(Integer integer) {
         return null;
     }
 
     @Override
-    public GeneralEquipmentModal update(Integer integer, GeneralEquipmentDto entity) {
+    public GeneralEquipmentModel update(Integer integer, GeneralEquipmentDto entity) {
         return null;
     }
 
     @Transactional
     public int executeIntegration() throws SQLException {
         // 1. Pega a lista de equipamentos do banco Lykos
-        List<GeneralEquipmentModal> equipments = lista();
+        List<GeneralEquipmentModel> equipments = lista();
 
         // 2. Insere os equipamentos no banco local
         int rowsProcessed = 0;
-        for (GeneralEquipmentModal equipment : equipments) {
+        for (GeneralEquipmentModel equipment : equipments) {
             rowsProcessed += equipmentRegistration(equipment);
         }
         return rowsProcessed;
     }
 
     @Transactional(readOnly = true, transactionManager = "transactionManagerLykos")
-    public List<GeneralEquipmentModal> lista() throws SQLException {
+    public List<GeneralEquipmentModel> lista() throws SQLException {
         String sql = "SELECT * FROM integracao.view_material WHERE ID > ? ORDER BY ID ASC";
         return jdbcTemplateLykos.query(sql, new Object[]{ultimoSequencia()}, new GeneralEquipmentMapper());
     }
@@ -86,7 +86,7 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
     }
 
     @Transactional
-    public int equipmentRegistration(GeneralEquipmentModal equipment) {
+    public int equipmentRegistration(GeneralEquipmentModel equipment) {
         String sql = "INSERT INTO bd_estoque.equipamento_geral (ID_KERY, CODIGO, DESCRICAO, ABREVIACAO_UM, DESCRICAO_UM) VALUES (?, ?, ?, ?, ?)";
         return jdbcTemplateLocal.update(sql,
                 equipment.getIdKey(),
@@ -96,10 +96,10 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
                 equipment.getDescricaoUm());
     }
 
-    private static class GeneralEquipmentMapper implements RowMapper<GeneralEquipmentModal> {
+    private static class GeneralEquipmentMapper implements RowMapper<GeneralEquipmentModel> {
         @Override
-        public GeneralEquipmentModal mapRow(ResultSet rs, int rowNum) throws SQLException {
-            GeneralEquipmentModal equipment = new GeneralEquipmentModal();
+        public GeneralEquipmentModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+            GeneralEquipmentModel equipment = new GeneralEquipmentModel();
             equipment.setIdKey(rs.getInt("id"));
             equipment.setCodigo(rs.getString("codigo"));
             equipment.setDescricao(rs.getString("descricao"));

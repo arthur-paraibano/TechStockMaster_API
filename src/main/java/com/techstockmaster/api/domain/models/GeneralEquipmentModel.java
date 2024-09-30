@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Setter
 @Entity
 @Table(name = "equipamento_geral")
-public class GeneralEquipmentModal extends RepresentationModel<GeneralEquipmentModal> implements Serializable {
+public class GeneralEquipmentModel extends RepresentationModel<GeneralEquipmentModel> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

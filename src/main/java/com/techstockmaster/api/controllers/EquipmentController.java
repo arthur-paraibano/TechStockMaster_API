@@ -1,7 +1,7 @@
 package com.techstockmaster.api.controllers;
 
 import com.techstockmaster.api.controllers.dtos.EquipmentDto;
-import com.techstockmaster.api.domain.models.EquipmentModal;
+import com.techstockmaster.api.domain.models.EquipmentModel;
 import com.techstockmaster.api.services.EquipmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,10 +38,10 @@ public class EquipmentController {
             @ApiResponse(responseCode = "404", description = "Nenhum equipamento encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<List<EquipmentModal>> getAll() {
-        List<EquipmentModal> equipment = service.findAll();
+    public ResponseEntity<List<EquipmentModel>> getAll() {
+        List<EquipmentModel> equipment = service.findAll();
         if (!equipment.isEmpty()) {
-            for (EquipmentModal equipmentos : equipment) {
+            for (EquipmentModel equipmentos : equipment) {
                 Integer id = equipmentos.getId();
                 equipmentos.add(linkTo(methodOn(EquipmentController.class).getById(equipmentos.getId())).withSelfRel());
             }
@@ -58,8 +58,8 @@ public class EquipmentController {
             @ApiResponse(responseCode = "404", description = "Equipamento não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<EquipmentModal> getById(@PathVariable Integer id) {
-        EquipmentModal equipment = service.findById(id);
+    public ResponseEntity<EquipmentModel> getById(@PathVariable Integer id) {
+        EquipmentModel equipment = service.findById(id);
         if (equipment != null) {
             equipment.add(linkTo(methodOn(EquipmentController.class).getAll()).withRel("All Equipment"));
             return ResponseEntity.status(HttpStatus.OK).body(equipment);
@@ -77,7 +77,7 @@ public class EquipmentController {
     })
     public ResponseEntity<Object> add(@Validated @RequestBody EquipmentDto dto) {
         try {
-            EquipmentModal modal = service.create(dto);
+            EquipmentModel modal = service.create(dto);
             modal.add(linkTo(methodOn(EquipmentController.class).getAll()).withRel("All Material/Equipamento"));
             return ResponseEntity.status(HttpStatus.CREATED).body(modal);
         } catch (DataIntegrityViolationException e) {

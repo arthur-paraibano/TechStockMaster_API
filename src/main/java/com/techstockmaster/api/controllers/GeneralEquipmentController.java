@@ -1,7 +1,6 @@
 package com.techstockmaster.api.controllers;
 
-import com.techstockmaster.api.domain.models.GeneralEquipmentModal;
-import com.techstockmaster.api.domain.models.SupervisorModel;
+import com.techstockmaster.api.domain.models.GeneralEquipmentModel;
 import com.techstockmaster.api.services.GeneralEquipmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,10 +38,10 @@ public class GeneralEquipmentController {
             @ApiResponse(responseCode = "404", description = "Nenhum equipamento encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<List<GeneralEquipmentModal>> getAll() {
-        List<GeneralEquipmentModal> equipmentList = service.findAll();
+    public ResponseEntity<List<GeneralEquipmentModel>> getAll() {
+        List<GeneralEquipmentModel> equipmentList = service.findAll();
         if (!equipmentList.isEmpty()) {
-            for (GeneralEquipmentModal equipment : equipmentList) {
+            for (GeneralEquipmentModel equipment : equipmentList) {
                 equipment.add(linkTo(methodOn(GeneralEquipmentController.class).getById(equipment.getId())).withSelfRel());
             }
             return ResponseEntity.ok().body(equipmentList);
@@ -58,8 +57,8 @@ public class GeneralEquipmentController {
             @ApiResponse(responseCode = "404", description = "Equipamento não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<GeneralEquipmentModal> getById(@PathVariable Integer id) {
-        GeneralEquipmentModal obj = service.findById(id);
+    public ResponseEntity<GeneralEquipmentModel> getById(@PathVariable Integer id) {
+        GeneralEquipmentModel obj = service.findById(id);
         if (obj != null) {
             obj.add(linkTo(methodOn(GeneralEquipmentController.class).getAll()).withRel("Supervisor List"));
             return ResponseEntity.status(HttpStatus.OK).body(obj);
