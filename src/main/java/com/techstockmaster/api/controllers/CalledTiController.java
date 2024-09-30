@@ -97,20 +97,4 @@ public class CalledTiController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
-    @DeleteMapping("/{id}/delete")
-    @Operation(summary = "Excluir um chamado", description = "Exclui um chamado existente baseado no ID fornecido")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Chamado excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Chamado não encontrado"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        CalledTiModel deleted = service.delete(id);
-        if (deleted != null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
 }

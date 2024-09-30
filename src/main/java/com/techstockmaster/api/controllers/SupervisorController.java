@@ -88,22 +88,6 @@ public class SupervisorController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar supervisor", description = "Remove um supervisor baseado no ID fornecido")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Supervisor deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Supervisor não encontrado"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
-        SupervisorModel model = service.delete(id);
-        if (model != null) {
-            return ResponseEntity.status(HttpStatus.OK).body("Supervisor deletado com sucesso.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Supervisor não deletado.");
-        }
-    }
-
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar supervisor", description = "Atualiza um supervisor existente")
     @ApiResponses(value = {

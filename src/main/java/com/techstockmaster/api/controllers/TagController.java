@@ -100,32 +100,6 @@ public class TagController {
     }
 
     /*
-     * Deleta um tag pelo ID.
-     */
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar um Tag", description = "Deleta um Tag específico pelo ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tag deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Tag não encontrado"),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-    })
-    public ResponseEntity<String> deleteTag(@PathVariable Integer id) {
-        try {
-            TagModel model = service.delete(id);
-            if (model != null) {
-                return ResponseEntity.status(HttpStatus.OK).body("Tag deletado com sucesso.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tag não encontrado.");
-            }
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage()); // Status 409 Conflict para erros de integridade
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno do servidor.");
-        }
-    }
-
-
-    /*
      * Atualizar descrição da Tag
      */
     @PutMapping("/{id}")
