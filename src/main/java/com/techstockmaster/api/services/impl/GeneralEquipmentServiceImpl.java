@@ -5,6 +5,7 @@ import com.techstockmaster.api.domain.models.GeneralEquipmentModal;
 import com.techstockmaster.api.domain.repositories.GeneralEquipmentRepository;
 import com.techstockmaster.api.services.GeneralEquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,12 @@ import java.util.Optional;
 public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @Qualifier("jdbcTemplateLocal")
+    private JdbcTemplate jdbcTemplateLocal;
+
+    @Autowired
+    @Qualifier("jdbcTemplateLykos")
+    private JdbcTemplate jdbcTemplateLykos;
 
     @Autowired
     private final GeneralEquipmentRepository repository;
@@ -34,8 +40,8 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
     }
 
     @Override
-    public GeneralEquipmentModal findById(Integer integer) {
-        Optional<GeneralEquipmentModal> entity = repository.findById(integer);
+    public GeneralEquipmentModal findById(Integer id) {
+        Optional<GeneralEquipmentModal> entity = repository.findById(id);
         return entity.orElse(null);
     }
 
@@ -54,13 +60,35 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
         return null;
     }
 
-    /***
-     * Registra os equipamentos no banco de dados local
-     ***/
+    @Transactional
+    public int executeIntegration() throws SQLException {
+        // 1. Pega a lista de equipamentos do banco Lykos
+        List<GeneralEquipmentModal> equipments = lista();
+
+        // 2. Insere os equipamentos no banco local
+        int rowsProcessed = 0;
+        for (GeneralEquipmentModal equipment : equipments) {
+            rowsProcessed += equipmentRegistration(equipment);
+        }
+        return rowsProcessed;
+    }
+
+    @Transactional(readOnly = true, transactionManager = "transactionManagerLykos")
+    public List<GeneralEquipmentModal> lista() throws SQLException {
+        String sql = "SELECT * FROM integracao.view_material WHERE ID > ? ORDER BY ID ASC";
+        return jdbcTemplateLykos.query(sql, new Object[]{ultimoSequencia()}, new GeneralEquipmentMapper());
+    }
+
+    @Transactional(readOnly = true, transactionManager = "transactionManagerLocal")
+    public String ultimoSequencia() {
+        String sql = "SELECT ID_KERY FROM bd_estoque.equipamento_geral ORDER BY ID_KERY DESC LIMIT 1";
+        return jdbcTemplateLocal.queryForObject(sql, String.class);
+    }
+
     @Transactional
     public int equipmentRegistration(GeneralEquipmentModal equipment) {
         String sql = "INSERT INTO bd_estoque.equipamento_geral (ID_KERY, CODIGO, DESCRICAO, ABREVIACAO_UM, DESCRICAO_UM) VALUES (?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql,
+        return jdbcTemplateLocal.update(sql,
                 equipment.getIdKey(),
                 equipment.getCodigo(),
                 equipment.getDescricao(),
@@ -68,32 +96,11 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
                 equipment.getDescricaoUm());
     }
 
-    /***
-     * Lista os equipamentos do banco de dados da Lykos
-     ***/
-    @Transactional(readOnly = true)
-    public List<GeneralEquipmentModal> lista() throws SQLException {
-        String sql = "SELECT CAST(ID AS SIGNED) AS ID_KERY, CODIGO as codigo, DESCRICAO as descricao, " +
-                "ABREVIACAO_UM as abreviacao_um, DESCRICAO_UM as descricao_um " +
-                "FROM integracao.view_material WHERE ID > ? ORDER BY ID ASC";
-        return jdbcTemplate.query(sql, new Object[]{ultimoSequencia()}, new GeneralEquipmentMapper());
-    }
-
-    /***
-     * Retorna o último ID_KERY do banco de dados local
-     ***/
-    @Transactional(readOnly = true)
-    public String ultimoSequencia() {
-        String sql = "SELECT ID_KERY FROM bd_estoque.equipamento_geral ORDER BY ID_KERY DESC LIMIT 1";
-        return jdbcTemplate.queryForObject(sql, String.class);
-    }
-
-    // Mapeador de ResultSet para GeneralEquipmentModal
     private static class GeneralEquipmentMapper implements RowMapper<GeneralEquipmentModal> {
         @Override
         public GeneralEquipmentModal mapRow(ResultSet rs, int rowNum) throws SQLException {
             GeneralEquipmentModal equipment = new GeneralEquipmentModal();
-            equipment.setIdKey(rs.getInt("ID_KERY"));
+            equipment.setIdKey(rs.getInt("id"));
             equipment.setCodigo(rs.getString("codigo"));
             equipment.setDescricao(rs.getString("descricao"));
             equipment.setAbreviacaoUm(rs.getString("abreviacao_um"));

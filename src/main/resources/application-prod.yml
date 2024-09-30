@@ -3,14 +3,14 @@ spring:
     name: techstockmaster_api
 
   datasource:
-    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}
-    username: ${MYSQLUSER}
-    password: ${MYSQLPASSWORD}
-
-    url_Lykos: jdbc:mysql://${LYKOSHOST}:${LYKOSPORT}/${LYKOSDATABASE}?allowPublicKeyRetrieval=true&useSSL=false
-    username_Lykos: ${LYKOSUSER}
-    password_Lykos: ${LYKOSPASSWORD}
-    update: tre
+    local:
+      url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}
+      username: ${MYSQLUSER}
+      password: ${MYSQLPASSWORD}
+    lykos:
+      url: jdbc:mysql://${LYKOSHOST}:${LYKOSPORT}/${LYKOSDATABASE}?allowPublicKeyRetrieval=true&useSSL=false
+      username: ${LYKOSUSER}
+      password: ${LYKOSPASSWORD}
 
   jpa:
     open-in-view: false
