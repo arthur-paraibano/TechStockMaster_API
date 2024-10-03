@@ -1,7 +1,6 @@
 package com.techstockmaster.api.controllers.dtos;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.websocket.OnMessage;
 
 public record EquipmentDto(
         @NotBlank(message = "Informe o Id do equipamento deseja cadastrar") Integer id,

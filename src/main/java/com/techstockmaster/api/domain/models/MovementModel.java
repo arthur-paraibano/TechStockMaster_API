@@ -2,7 +2,7 @@ package com.techstockmaster.api.domain.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.techstockmaster.api.domain.impl.TypeMovement;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,6 +25,11 @@ public class MovementModel extends RepresentationModel<MovementModel> implements
     @Column(name = "ID")
     private Integer id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FK_CODEQUIP", nullable = false)
+    @JsonManagedReference
+    private EquipmentModel idEquipment;
+
     @Column(name = "QUANTIDADE", nullable = false)
     private Double quantity;
 
@@ -35,22 +40,16 @@ public class MovementModel extends RepresentationModel<MovementModel> implements
     @Temporal(TemporalType.DATE)
     private LocalDate date;
 
-    @Column(name = "TYPE", length = 255, nullable = false)
-    private TypeMovement type;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FK_CODEQUIP", nullable = false)
-    @JsonIgnore
-    private EquipmentModel idEquipment;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FK_CODUSER", nullable = false)
     @JsonIgnore
     private UserModel idUser;
 
+    @Column(name = "TYPE", length = 255, nullable = false)
+    private String type;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FK_CODSETOR", nullable = false)
-    @JsonIgnore
+    @JsonManagedReference
     private SectorModel idSector;
-
 }

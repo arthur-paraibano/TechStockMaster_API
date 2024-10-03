@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,19 +38,18 @@ public class MovementController {
             @ApiResponse(responseCode = "404", description = "Nenhum movimento encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<List<MovementModel>> getAllMovement() {
+    public ResponseEntity<List<MovementModel>> getAll() {
         List<MovementModel> models = service.findAll();
         if (!models.isEmpty()) {
             for (MovementModel list : models) {
                 Integer id = list.getId();
-                list.add(linkTo(methodOn(MovementController.class).getMovementById(id)).withSelfRel());
+                list.add(linkTo(methodOn(MovementController.class).getById(id)).withSelfRel());
             }
             return ResponseEntity.status(HttpStatus.OK).body(models);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar movimento por ID", description = "Retorna um movimento específico pelo ID")
@@ -58,12 +58,13 @@ public class MovementController {
             @ApiResponse(responseCode = "404", description = "Movimento não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    private ResponseEntity<MovementModel> getMovementById(Integer id) {
-        MovementModel model = service.findById(id);
-        if (model != null) {
-            model.add(linkTo(methodOn(MovementController.class).getAllMovement()).withRel("Movement List"));
-            return ResponseEntity.status(HttpStatus.OK).body(model);
+    public ResponseEntity<MovementModel> getById(@PathVariable Integer id) {
+        MovementModel mov = service.findById(id);
+        if (mov != null) {
+            mov.add(linkTo(methodOn(MovementController.class).getAll()).withRel("Movement List"));
+            return ResponseEntity.status(HttpStatus.OK).body(mov);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

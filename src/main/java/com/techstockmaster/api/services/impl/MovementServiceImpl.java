@@ -2,8 +2,11 @@ package com.techstockmaster.api.services.impl;
 
 import com.techstockmaster.api.controllers.dtos.MovementDto;
 import com.techstockmaster.api.domain.models.MovementModel;
+import com.techstockmaster.api.domain.models.UserModel;
 import com.techstockmaster.api.domain.repositories.MovementRepository;
+import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.MovementService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +19,12 @@ public class MovementServiceImpl implements MovementService {
     @Autowired
     private final MovementRepository repository;
 
-    public MovementServiceImpl(MovementRepository repository) {
+    @Autowired
+    private final UserRepository userRepository;
+
+    public MovementServiceImpl(MovementRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -32,8 +39,21 @@ public class MovementServiceImpl implements MovementService {
     }
 
     @Override
-    public MovementModel create(MovementDto entity) {
-        return null;
+    public MovementModel create(MovementDto dto) {
+        String status = dto.nLykos();
+        if (!status.matches("IN|OUT")) {
+            throw new IllegalArgumentException("Relevância deve ser ALTO, MÉDIO ou BAIXO");
+        }
+
+        MovementModel mov = new MovementModel();
+        //  mov.setDate(LocalDate.now());
+
+        // Buscar usuário pelo ID
+        UserModel user = userRepository.findById(dto.idUsuario())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+
+        return repository.save(mov);
     }
 
     @Override
