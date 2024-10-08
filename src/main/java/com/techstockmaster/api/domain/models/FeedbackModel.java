@@ -1,5 +1,7 @@
 package com.techstockmaster.api.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,6 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,7 +37,7 @@ public class FeedbackModel extends RepresentationModel<FeedbackModel> implements
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_userid", nullable = false)
+    @JoinColumn(name = "FK_USERID", nullable = false)
     @JsonManagedReference
     private UserModel user;
 }

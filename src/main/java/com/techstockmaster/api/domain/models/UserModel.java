@@ -53,10 +53,6 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(name = "blocked")
     private String blocked;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
-    private List<FeedbackModel> feedbackModels;
-
     public UserModel() {
     }
 }
