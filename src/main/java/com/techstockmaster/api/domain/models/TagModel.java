@@ -12,13 +12,15 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Getter
 @Entity
+@Setter
+@Getter
 @Table(name = "tag", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "abrev_tag"),
-        @UniqueConstraint(columnNames = "descTag")
+        @UniqueConstraint(columnNames = "abrevtag"),
+        @UniqueConstraint(columnNames = "desctag")
 })
 public class TagModel extends RepresentationModel<TagModel> implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -27,21 +29,12 @@ public class TagModel extends RepresentationModel<TagModel> implements Serializa
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "abrev_tag")
-    @Setter
-    @Nonnull
-    @NotBlank(message = "A abreviação não deve estar em branco")
+    @Column(name = "abrevtag")
     private String abrevTag;
 
-    @Column(name = "descTag")
-    @Setter
-    @Nonnull
-    @NotBlank(message = "A descrição não deve estar em branco")
+    @Column(name = "desctag")
     private String descTag;
 
     @Column(name = "DATA")
-    @Setter
-    @Nonnull
-    @NotNull(message = "A data não pode ser nula")
     private LocalDate date;
 }

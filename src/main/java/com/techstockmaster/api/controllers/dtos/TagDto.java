@@ -11,6 +11,6 @@ public record TagDto(
         @Pattern(regexp = ".{3,3}", message = "O nome deve ter no mínimo e no máximo 3 caracteres")
         String abreviacao,
 
-        @NotBlank(message = "A descrição não deve estar em branco")
-        String descircao) {
+        @NotBlank(message = "A descrição não deve estar em branco") String descircao
+) {
 }
