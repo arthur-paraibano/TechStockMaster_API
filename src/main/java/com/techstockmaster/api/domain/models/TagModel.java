@@ -29,11 +29,11 @@ public class TagModel extends RepresentationModel<TagModel> implements Serializa
     private Integer id;
 
     @NotBlank(message = "A abreviação da tag não pode estar em branco")
-    @Column(name = "abrev_tag", nullable = false)
+    @Column(name = "abrevtag", nullable = false)
     private String abrevTag;
 
     @NotBlank(message = "A descrição da tag não pode estar em branco")
-    @Column(name = "desc_tag", nullable = false)
+    @Column(name = "desctag", nullable = false)
     private String descTag;
 
     @NotNull(message = "A data não pode ser nula")
