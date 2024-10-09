@@ -1,6 +1,5 @@
 package com.techstockmaster.api.domain.models;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +15,8 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Table(name = "tag", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "abrevtag"),
-        @UniqueConstraint(columnNames = "desctag")
+        @UniqueConstraint(columnNames = "abrev_tag"),
+        @UniqueConstraint(columnNames = "desc_tag")
 })
 public class TagModel extends RepresentationModel<TagModel> implements Serializable {
 
@@ -29,12 +28,15 @@ public class TagModel extends RepresentationModel<TagModel> implements Serializa
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "abrevtag")
+    @NotBlank(message = "A abreviação da tag não pode estar em branco")
+    @Column(name = "abrev_tag", nullable = false)
     private String abrevTag;
 
-    @Column(name = "desctag")
+    @NotBlank(message = "A descrição da tag não pode estar em branco")
+    @Column(name = "desc_tag", nullable = false)
     private String descTag;
 
-    @Column(name = "DATA")
+    @NotNull(message = "A data não pode ser nula")
+    @Column(name = "DATA", nullable = false)
     private LocalDate date;
 }

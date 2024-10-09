@@ -48,29 +48,42 @@ public class RepairServiceImpl implements RepairService {
 
     @Override
     public RepairModel create(RepairDto dto) {
-        String status = dto.status().toUpperCase();
-        if (!status.matches("AGUARDANDO ENVIO|EM CONSERTO")) {
-            throw new IllegalArgumentException("O status deve ser AGUARDANDO ENVIO ou EM CONSERTO");
+        Integer id = dto.idEquipamento();
+        if (id != null) {
+            Optional<RepairModel> existingRepair = repository.findByIdRepair(id);
+            if (existingRepair.isPresent()) {
+                throw new IllegalArgumentException("Equipamento já cadastrado para conserto!");
+            }
         }
 
-        Integer idEquipamento = dto.idEquipamento();
+        // Status já é validado no DTO, então podemos remover a validação aqui
+        String status = dto.status().toUpperCase();
 
-        EquipmentModel equip = equipmentRepository.findById(dto.idEquipamento()).orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado"));
-        UserModel user = userRepository.findById(dto.idUsuario()).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        // Buscar o equipamento pelo ID
+        EquipmentModel equip = equipmentRepository.findByIdEquipm(dto.idEquipamento())
+                .orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado"));
 
-        Integer idquip = equip.getId();
+        // Buscar o usuário pelo ID
+        UserModel user = userRepository.findById(dto.idUsuario())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-
-        // ID, FK_EQUIPE, TAG, FK_SET, FK_TECNIC, DATA, DESCRICAO, STATUS
+        // Criar nova instância de RepairModel e setar os campos
         RepairModel rep = new RepairModel();
+        // Associar a entidade EquipmentModel diretamente
         rep.setIdEquipment(equip);
-//        rep.setTag();
-//        rep.setIdSector();
+        // Associar a entidade SectorModel diretamente
+        rep.setIdSector(equip.getIdSector());
+        // Definir a tag, utilizando a abreviação, por exemplo
+        rep.setTag(equip.getTag().getAbrevTag() + "-" + String.format("%03d", equip.getTag()));
+        // Associar o usuário
         rep.setIdUser(user);
+        // Definir a data atual
         rep.setDate(LocalDate.now());
+        // Definir a descrição e status
         rep.setDescricao(dto.descricao());
-        rep.setStatus(dto.status());
+        rep.setStatus(status);
 
+        // Salvar e retornar o modelo de conserto criado
         return repository.save(rep);
     }
 
