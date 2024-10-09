@@ -16,7 +16,7 @@ public interface RepairRepository extends JpaRepository<RepairModel, Integer> {
     @Query("SELECT RM FROM RepairModel RM WHERE RM.id = :id")
     Optional<RepairModel> findById(Integer id);
 
-    @Query("SELECT RM FROM RepairModel RM WHERE RM.FK_EQUIPE = :id")
-    Optional<RepairModel> findByIdRepair(Integer id);
+//    @Query("SELECT RM FROM RepairModel RM WHERE RM.FK_EQUIPE = :id")
+//    Optional<RepairModel> findByIdRepair(Integer id);
 
 }
