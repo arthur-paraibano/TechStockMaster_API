@@ -50,4 +50,6 @@ public class RepairModel extends RepresentationModel<RepairModel> implements Ser
 
     @Column(name = "STATUS", nullable = false)
     private String status;
+
+  //  private String sequencia;
 }

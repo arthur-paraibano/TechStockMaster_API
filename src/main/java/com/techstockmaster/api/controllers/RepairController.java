@@ -70,20 +70,20 @@ public class RepairController {
         }
     }
 
-//    @PostMapping("/add")
-//    @Operation(summary = "Adicionar um novo conserto", description = "Cria um novo Conserto")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "Conserto criado com sucesso"),
-//            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-//            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-//    })
-//    public ResponseEntity<Object> add(@Validated @RequestBody RepairDto dto) {
-//        try {
-//            RepairModel newRepair = service.create(dto);
-//            newRepair.add(linkTo(methodOn(RepairController.class).getAll()).withRel("All Consertos"));
-//            return ResponseEntity.status(HttpStatus.CREATED).body(newRepair);
-//        } catch (DataIntegrityViolationException e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-//        }
-//    }
+    @PostMapping("/add")
+    @Operation(summary = "Adicionar um novo conserto", description = "Cria um novo Conserto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Conserto criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Object> add(@Validated @RequestBody RepairDto dto) {
+        try {
+            RepairModel newRepair = service.create(dto);
+            newRepair.add(linkTo(methodOn(RepairController.class).getAll()).withRel("All Consertos"));
+            return ResponseEntity.status(HttpStatus.CREATED).body(newRepair);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }
