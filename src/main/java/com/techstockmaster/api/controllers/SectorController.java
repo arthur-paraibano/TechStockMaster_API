@@ -1,6 +1,8 @@
 package com.techstockmaster.api.controllers;
 
 import com.techstockmaster.api.controllers.dtos.SectorDto;
+import com.techstockmaster.api.controllers.dtos.SectorLocacaoDto;
+import com.techstockmaster.api.controllers.dtos.SectorSupervisorDto;
 import com.techstockmaster.api.domain.models.SectorModel;
 import com.techstockmaster.api.services.SectorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,6 +83,48 @@ public class SectorController {
             SectorModel modal = service.create(dto);
             modal.add(linkTo(methodOn(FeedbackController.class).getAll()).withRel("All Feedbacks"));
             return ResponseEntity.status(HttpStatus.CREATED).body(modal);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/supervisor")
+    @Operation(summary = "Atualizar Supervisor", description = "Atualiza a responsável pelo setor")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Supervisor atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Supervisor não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Object> updateSuperior(@PathVariable Integer id, @RequestBody SectorSupervisorDto dto) {
+        try {
+            SectorModel update = service.updateSupervisor(id, dto);
+            if (update == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector não encontrado.");
+            }
+            update.add(linkTo(methodOn(SectorController.class).getById(update.getId())).withSelfRel());
+            return ResponseEntity.status(HttpStatus.OK).body(update);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/locacao")
+    @Operation(summary = "Atualizar locação", description = "Atualiza a locação do setor")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Locação atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Locação não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Object> updateLocacao(@PathVariable Integer id, @RequestBody SectorLocacaoDto dto) {
+        try {
+            SectorModel update = service.updateLocacao(id, dto);
+            if (update == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector não encontrado.");
+            }
+            update.add(linkTo(methodOn(SectorController.class).getById(update.getId())).withSelfRel());
+            return ResponseEntity.status(HttpStatus.OK).body(update);
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
