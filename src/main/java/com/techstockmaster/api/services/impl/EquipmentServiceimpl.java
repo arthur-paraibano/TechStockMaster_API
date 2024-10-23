@@ -1,10 +1,12 @@
 package com.techstockmaster.api.services.impl;
 
 import com.techstockmaster.api.controllers.dtos.EquipmentDto;
+import com.techstockmaster.api.controllers.dtos.EquipmentUpdateDto;
 import com.techstockmaster.api.domain.models.EquipmentModel;
 import com.techstockmaster.api.domain.repositories.EquipmentRepository;
 import com.techstockmaster.api.services.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +50,7 @@ public class EquipmentServiceimpl implements EquipmentService {
                     throw new IllegalArgumentException("Status deve ser EM USO, ESTOQUE ou INATIVO");
                 }
                 Integer idSector, tag;
-                if (dto.idSector() == null || dto.tag() == null){
+                if (dto.idSector() == null || dto.tag() == null) {
                     throw new IllegalArgumentException("Preencha todos os campos Id do Setor, Id da Tag referente respectivamente");
                 }
                 break;
@@ -67,5 +69,17 @@ public class EquipmentServiceimpl implements EquipmentService {
     @Override
     public EquipmentModel update(Integer integer, EquipmentDto entity) {
         return null;
+    }
+
+    @Override
+    public EquipmentModel updateDescription(Integer id, EquipmentUpdateDto dto) {
+        if (!repository.existsById(id)) {
+            throw new DataIntegrityViolationException("O Equipamento não existe!");
+        }
+        EquipmentModel user = repository.findById(id)
+                .orElseThrow(() -> new DataIntegrityViolationException("Equipamento não encontrado!"));
+        user.setDescription(dto.description());
+        repository.save(user);
+        return user;
     }
 }
