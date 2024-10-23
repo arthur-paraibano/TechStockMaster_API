@@ -100,7 +100,7 @@ public class EquipmentController {
             if (update == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Equipamento não encontrado.");
             }
-            update.add(linkTo(methodOn(UserController.class).getUserById(update.getId())).withSelfRel());
+            update.add(linkTo(methodOn(EquipmentController.class).getById(update.getId())).withSelfRel());
             return ResponseEntity.status(HttpStatus.OK).body(update);
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
