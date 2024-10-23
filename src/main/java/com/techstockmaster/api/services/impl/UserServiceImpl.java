@@ -1,5 +1,6 @@
 package com.techstockmaster.api.services.impl;
 
+import com.techstockmaster.api.controllers.dtos.UserBlockedDto;
 import com.techstockmaster.api.controllers.dtos.UserDto;
 import com.techstockmaster.api.controllers.dtos.UserPasswordDto;
 import com.techstockmaster.api.domain.models.UserModel;
@@ -7,8 +8,11 @@ import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.UserService;
 import com.techstockmaster.api.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +22,10 @@ import java.util.Optional;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    @Qualifier("jdbcTemplateLocal")
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private final UserRepository userRepository; // Injeção da classe UserRepository
@@ -64,9 +72,9 @@ public class UserServiceImpl implements UserService {
 
     // Metodo para excluir usuário passando o ID dele
     public UserModel delete(Integer id) {
-        Optional<UserModel> user = userRepository.findById(id);
-        userRepository.delete(user.get());
-        return user.orElse(null);
+//        Optional<UserModel> user = userRepository.findById(id);
+//        userRepository.delete(user.get());
+        return null;
     }
 
     // Metodo para fazer alterações passando o ID do usuário
@@ -98,6 +106,38 @@ public class UserServiceImpl implements UserService {
         existingUser.setBlocked("0");
 
         return userRepository.save(existingUser);
+    }
+
+    public UserModel blockedUserById(Integer id, UserBlockedDto dto) {
+        if (!userRepository.existsById(id)) {
+            throw new DataIntegrityViolationException("O usuário para bloquear não existe!");
+        }
+        if (!userRepository.existsById(dto.idUserRequester())) {
+            throw new DataIntegrityViolationException("O usuário responsável pelo bloqueio não existe!");
+        }
+
+        UserModel user = userRepository.findById(id)
+                .orElseThrow(() -> new DataIntegrityViolationException("Usuário não encontrado!"));
+
+        if (user.getBlocked().equals("1")) {
+            throw new DataIntegrityViolationException("O usuário já bloqueio!");
+        }
+
+        String role = validateUser(dto.idUserRequester());
+
+        if (!"ADMIN".equals(role.trim())) {
+            throw new DataIntegrityViolationException("Você não tem permissão para realizar esta operação!");
+        }
+
+        user.setBlocked("1");
+        userRepository.save(user);
+        return user;
+    }
+
+    @Transactional(readOnly = true, transactionManager = "transactionManagerLocal")
+    private String validateUser(Integer id) {
+        String sql = "SELECT user_type FROM usernames WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
     }
 
     // Metodo para redefinir senha do Usuario no primeiro login.

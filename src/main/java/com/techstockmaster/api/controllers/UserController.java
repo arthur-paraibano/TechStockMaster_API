@@ -1,5 +1,6 @@
 package com.techstockmaster.api.controllers;
 
+import com.techstockmaster.api.controllers.dtos.UserBlockedDto;
 import com.techstockmaster.api.controllers.dtos.UserDto;
 import com.techstockmaster.api.controllers.dtos.UserPasswordDto;
 import com.techstockmaster.api.domain.models.UserModel;
@@ -90,25 +91,24 @@ public class UserController {
         }
     }
 
-//    @DeleteMapping("/{id}")
-//    @Operation(summary = "Deletar usuário", description = "Remove um usuário baseado no ID fornecido")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Usuário deletado com sucesso"),
-//            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
-//            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-//    })
-//    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
-//        if (id.equals(1)) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não pode ser deletado.");
-//        } else {
-//            UserModel user = userService.deleterUserById(id);
-//            if (user != null) {
-//                return ResponseEntity.status(HttpStatus.OK).body("Usuário deletado com sucesso.");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não deletado.");
-//            }
-//        }
-//    }
+    @PutMapping("/{id}/block")
+    @Operation(summary = "Bloquear usuário", description = "Bloquea um usuário baseado no ID fornecido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário bloqueado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<String> blockedUser(@PathVariable Integer id, UserBlockedDto dto) {
+        try {
+            UserModel user = userService.blockedUserById(id, dto);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não bloqueado.");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body("Usuário bloqueado com sucesso.");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar usuário", description = "Atualiza um usuário existente")
