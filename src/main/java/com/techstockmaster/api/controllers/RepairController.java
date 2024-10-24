@@ -1,8 +1,7 @@
 package com.techstockmaster.api.controllers;
 
-import com.techstockmaster.api.controllers.dtos.FeedbackDto;
 import com.techstockmaster.api.controllers.dtos.RepairDto;
-import com.techstockmaster.api.domain.models.FeedbackModel;
+import com.techstockmaster.api.controllers.dtos.RepairStatusDto;
 import com.techstockmaster.api.domain.models.RepairModel;
 import com.techstockmaster.api.services.RepairService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,6 +81,24 @@ public class RepairController {
             RepairModel newRepair = service.create(dto);
             newRepair.add(linkTo(methodOn(RepairController.class).getAll()).withRel("All Consertos"));
             return ResponseEntity.status(HttpStatus.CREATED).body(newRepair);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/status")
+    @Operation(summary = "Atualizar Status", description = "Atualiza o status da equipamentos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Equipamento não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Object> updateLocacao(@PathVariable Integer id, @RequestBody RepairStatusDto dto) {
+        try {
+            RepairModel repairModel = service.updateStatus(id, dto);
+            repairModel.add(linkTo(methodOn(RepairController.class).getById(repairModel.getId())).withSelfRel());
+            return ResponseEntity.status(HttpStatus.OK).body(repairModel);
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

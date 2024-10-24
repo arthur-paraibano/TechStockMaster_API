@@ -1,6 +1,7 @@
 package com.techstockmaster.api.services.impl;
 
 import com.techstockmaster.api.controllers.dtos.RepairDto;
+import com.techstockmaster.api.controllers.dtos.RepairStatusDto;
 import com.techstockmaster.api.domain.models.*;
 import com.techstockmaster.api.domain.repositories.EquipmentRepository;
 import com.techstockmaster.api.domain.repositories.RepairRepository;
@@ -9,7 +10,11 @@ import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.RepairService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +22,10 @@ import java.util.Optional;
 
 @Service
 public class RepairServiceImpl implements RepairService {
+
+    @Autowired
+    @Qualifier("jdbcTemplateLocal")
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private final RepairRepository repository;
@@ -67,24 +76,38 @@ public class RepairServiceImpl implements RepairService {
         UserModel user = userRepository.findById(dto.idUsuario())
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-        // Criar nova instância de RepairModel e setar os campos
+        String tag = findTag(dto.idEquipamento());
+        if (tag.trim().equals("") || tag == null) {
+            throw new IllegalArgumentException("Não é um equipamento com TAG!");
+        }
+        String tagExit = findExist(tag);
+        if (!tagExit.trim().equals("") || tagExit == null){
+            throw new IllegalArgumentException("Equipamento já cadastrado para Conserto!");
+        }
+
         RepairModel rep = new RepairModel();
-        // Associar a entidade EquipmentModel diretamente
+
         rep.setIdEquipment(equip);
-        // Associar a entidade SectorModel diretamente
         rep.setIdSector(equip.getIdSector());
-        // Definir a tag, utilizando a abreviação, por exemplo
-        rep.setTag(equip.getTag().getAbrevTag() + "-" + String.format("%03d", equip.getTag()));
-        // Associar o usuário
+        rep.setTag(tag);
         rep.setIdUser(user);
-        // Definir a data atual
         rep.setDate(LocalDate.now());
-        // Definir a descrição e status
         rep.setDescricao(dto.descricao());
         rep.setStatus(status);
 
-        // Salvar e retornar o modelo de conserto criado
         return repository.save(rep);
+    }
+
+    @Transactional(readOnly = true, transactionManager = "transactionManagerLocal")
+    private String findTag(Integer id) {
+        String sql = "SELECT concat(abrevTag,'-',LPAD(TAG_SEQ, 3,0)) AS TAG FROM bd_estoque.equipamento ED LEFT JOIN  bd_estoque.tag T ON FK_TAG = T.ID  LEFT JOIN bd_estoque.setor S ON ID_CODSETOR = S.ID WHERE ED.ID = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
+    }
+
+    @Transactional(readOnly = true, transactionManager = "transactionManagerLocal")
+    private String findExist(String tag) {
+        String sql = "SELECT TAG FROM bd_estoque.conserto WHERE TAG = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{tag}, String.class);
     }
 
     @Override
@@ -95,5 +118,20 @@ public class RepairServiceImpl implements RepairService {
     @Override
     public RepairModel update(Integer integer, RepairDto entity) {
         return null;
+    }
+
+    @Override
+    public RepairModel updateStatus(Integer id, RepairStatusDto dto) {
+        RepairModel equip = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado"));
+
+        String status = dto.status().toUpperCase().trim();
+        if (!status.equals("AGUARDANDO ENVIO") || status.equals("EM CONSERTO") || status.equals("RECEBIDO")) {
+            throw new IllegalArgumentException("O tipo deve ser AGUARDANDO ENVIO, EM CONSERTO ou RECEBIDO!");
+        }
+
+        equip.setStatus(status);
+
+        return repository.save(equip);
     }
 }
