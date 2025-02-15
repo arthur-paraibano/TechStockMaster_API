@@ -4,6 +4,7 @@ import com.techstockmaster.api.controllers.dtos.GeneralEquipmentDto;
 import com.techstockmaster.api.domain.models.GeneralEquipmentModel;
 import com.techstockmaster.api.domain.repositories.GeneralEquipmentRepository;
 import com.techstockmaster.api.services.GeneralEquipmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
 
@@ -29,10 +31,6 @@ public class GeneralEquipmentServiceImpl implements GeneralEquipmentService {
 
     @Autowired
     private final GeneralEquipmentRepository repository;
-
-    public GeneralEquipmentServiceImpl(GeneralEquipmentRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<GeneralEquipmentModel> findAll() {

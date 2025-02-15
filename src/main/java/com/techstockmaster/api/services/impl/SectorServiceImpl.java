@@ -9,6 +9,7 @@ import com.techstockmaster.api.domain.repositories.SectorRepository;
 import com.techstockmaster.api.domain.repositories.SupervisorRepository;
 import com.techstockmaster.api.services.SectorService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class SectorServiceImpl implements SectorService {
 
@@ -24,11 +26,6 @@ public class SectorServiceImpl implements SectorService {
 
     @Autowired
     private final SupervisorRepository supervisorRepository;
-
-    public SectorServiceImpl(SectorRepository sectorRepository, SupervisorRepository supervisorRepository) {
-        this.sectorRepository = sectorRepository;
-        this.supervisorRepository = supervisorRepository;
-    }
 
     @Override
     public List<SectorModel> findAll() {

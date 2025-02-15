@@ -11,6 +11,7 @@ import com.techstockmaster.api.domain.repositories.SectorRepository;
 import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.MovementService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class MovementServiceImpl implements MovementService {
 
@@ -32,13 +34,6 @@ public class MovementServiceImpl implements MovementService {
 
     @Autowired
     private final SectorRepository sectorRepository;
-
-    public MovementServiceImpl(MovementRepository repository, UserRepository userRepository, EquipmentRepository equipmentRepository, SectorRepository sectorRepository) {
-        this.repository = repository;
-        this.userRepository = userRepository;
-        this.equipmentRepository = equipmentRepository;
-        this.sectorRepository = sectorRepository;
-    }
 
     @Override
     public List<MovementModel> findAll() {

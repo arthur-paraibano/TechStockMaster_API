@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 /*
  *  Classe responsável por fazer a ligação com o Usuário pelas requisições e o Serviço que faz as buscas
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/tag", produces = {"application/json"})
 @Tag(name = "Tag's API", description = "API para operações com Tag's")
@@ -31,10 +33,6 @@ public class TagController {
     // Chamando a classe Service.
     @Autowired
     private final TagService service;
-
-    public TagController(TagService service) {
-        this.service = service;
-    }
 
     /*
      * Metodo busca todos os usuarios.

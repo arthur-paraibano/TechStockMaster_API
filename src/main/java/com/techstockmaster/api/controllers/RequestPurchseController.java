@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/Solicitar compra", produces = {"application/json"})
 @Tag(name = "Solicitar compra API", description = "API para operações relacionadas a Solicitar compra")
@@ -28,10 +30,6 @@ public class RequestPurchseController {
 
     @Autowired
     private final RequestPurchseService service;
-
-    public RequestPurchseController(RequestPurchseService service) {
-        this.service = service;
-    }
 
     @GetMapping("/all")
     @Operation(summary = "Listar todos as Solicitações de compras", description = "Retorna uma lista de todos as Solicitações de compras")

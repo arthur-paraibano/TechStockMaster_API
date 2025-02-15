@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/generalEquipment", produces = {"application/json"})
 @Tag(name = "General Equipment API", description = "API para operações relacionadas ao Equipamento Geral")
@@ -26,10 +28,6 @@ public class GeneralEquipmentController {
 
     @Autowired
     private final GeneralEquipmentService service;
-
-    public GeneralEquipmentController(GeneralEquipmentService service) {
-        this.service = service;
-    }
 
     @GetMapping("/all")
     @Operation(summary = "Listar todos os equipamentos", description = "Retorna uma lista de todos os equipamentos")

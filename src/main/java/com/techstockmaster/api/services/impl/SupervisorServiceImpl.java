@@ -4,6 +4,7 @@ import com.techstockmaster.api.controllers.dtos.SupervisorDto;
 import com.techstockmaster.api.domain.models.SupervisorModel;
 import com.techstockmaster.api.domain.repositories.SupervisorRepository;
 import com.techstockmaster.api.services.SupervisorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,13 @@ import java.util.Optional;
 /*
  * Aqui estão todos os métodos com conexões com o banco de dados e algumas validações
  */
+@RequiredArgsConstructor
 @Service
 public class SupervisorServiceImpl implements SupervisorService {
 
     // Injeção da classe UserRepository
     @Autowired
     private final SupervisorRepository supervisorRepository;
-
-    public SupervisorServiceImpl(SupervisorRepository supervisorRepository) {
-        this.supervisorRepository = supervisorRepository;
-    }
 
     // Puxa tudo que existir na tabela informada no Modal
     public List<SupervisorModel> findAll() {

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 /*
  *  Classe responsável por fazer a ligação com o Usuário pelas requisições e o Serviço que faz as buscas
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/supervisor", produces = {"application/json"})
 @Tag(name = "Supervisor API", description = "API para operações com supervisores")
@@ -30,10 +32,6 @@ public class SupervisorController {
     // Chamando a classe Service.
     @Autowired
     private final SupervisorService service;
-
-    public SupervisorController(SupervisorService service) {
-        this.service = service;
-    }
 
     @GetMapping("/all")
     @Operation(summary = "Listar todos os supervisores", description = "Retorna uma lista de todos os supervisores")

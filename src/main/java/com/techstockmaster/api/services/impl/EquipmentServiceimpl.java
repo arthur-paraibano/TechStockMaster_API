@@ -5,6 +5,7 @@ import com.techstockmaster.api.controllers.dtos.EquipmentUpdateDto;
 import com.techstockmaster.api.domain.models.EquipmentModel;
 import com.techstockmaster.api.domain.repositories.EquipmentRepository;
 import com.techstockmaster.api.services.EquipmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -12,15 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class EquipmentServiceimpl implements EquipmentService {
 
     @Autowired
     private final EquipmentRepository repository;
-
-    public EquipmentServiceimpl(EquipmentRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<EquipmentModel> findAll() {

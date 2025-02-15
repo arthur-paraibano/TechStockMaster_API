@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 /*
  *  Classe responsável por fazer a ligação com o Usuário pelas requisições e o Serviço que faz as buscas
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/users", produces = {"application/json"})
 @Tag(name = "Usuários API", description = "API para operações com usuários")
@@ -32,10 +34,6 @@ public class UserController {
     // Chamando a classe Service.
     @Autowired
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/all")
     @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista de todos os usuários")

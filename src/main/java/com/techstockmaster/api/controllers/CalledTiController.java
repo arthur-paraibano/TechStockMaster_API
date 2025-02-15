@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/chamados", produces = {"application/json"})
 @Tag(name = "Chamados API", description = "API para operações relacionadas a chamados TI")
@@ -24,10 +26,6 @@ public class CalledTiController {
 
     @Autowired
     private final CalledTIService service;
-
-    public CalledTiController(CalledTIService service) {
-        this.service = service;
-    }
 
     @GetMapping("/all")
     @Operation(summary = "Listar todos os chamados", description = "Retorna uma lista de todos os chamados")

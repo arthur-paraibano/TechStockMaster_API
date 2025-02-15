@@ -7,6 +7,7 @@ import com.techstockmaster.api.domain.models.UserModel;
 import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.UserService;
 import com.techstockmaster.api.util.Encrypt;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +21,7 @@ import java.util.Optional;
 /*
  * Aqui estão todos os métodos com conexões com o banco de dados e algumas validações
  */
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -29,10 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final UserRepository userRepository; // Injeção da classe UserRepository
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     // Puxa tudo que existir na tabela informada no Modal
     public List<UserModel> findAll() {

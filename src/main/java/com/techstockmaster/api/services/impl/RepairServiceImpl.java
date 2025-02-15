@@ -9,6 +9,7 @@ import com.techstockmaster.api.domain.repositories.SectorRepository;
 import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.RepairService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class RepairServiceImpl implements RepairService {
 
@@ -38,13 +40,6 @@ public class RepairServiceImpl implements RepairService {
 
     @Autowired
     private final SectorRepository sectorRepository;
-
-    public RepairServiceImpl(RepairRepository repository, UserRepository userRepository, EquipmentRepository equipmentRepository, SectorRepository sectorRepository) {
-        this.repository = repository;
-        this.userRepository = userRepository;
-        this.equipmentRepository = equipmentRepository;
-        this.sectorRepository = sectorRepository;
-    }
 
     public List<RepairModel> findAll() {
         return repository.findAll();

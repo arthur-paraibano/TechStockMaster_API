@@ -7,6 +7,7 @@ import com.techstockmaster.api.domain.repositories.FeedbackRepository;
 import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.FeedbackService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
 
@@ -22,11 +24,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Autowired
     private final UserRepository userRepository;
-
-    public FeedbackServiceImpl(FeedbackRepository feedbackRepository, UserRepository userRepository) {
-        this.feedbackRepository = feedbackRepository;
-        this.userRepository = userRepository;
-    }
 
     public List<FeedbackModel> findAll() {
         return feedbackRepository.findAll();

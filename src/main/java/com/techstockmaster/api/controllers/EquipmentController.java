@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/equipamentos", produces = {"application/json"})
 @Tag(name = "Equipamentos API", description = "API para operações relacionadas a equipamentos")
@@ -27,10 +29,6 @@ public class EquipmentController {
 
     @Autowired
     private final EquipmentService service;
-
-    public EquipmentController(EquipmentService service) {
-        this.service = service;
-    }
 
     @GetMapping("/all")
     @Operation(summary = "Listar todos os equipamentos", description = "Retorna uma lista de todos os equipamentos cadastrados")

@@ -9,6 +9,7 @@ import com.techstockmaster.api.domain.repositories.SectorRepository;
 import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.RequestPurchseService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class RequestPurchseServiceImpl implements RequestPurchseService {
 
@@ -31,13 +33,6 @@ public class RequestPurchseServiceImpl implements RequestPurchseService {
 
     @Autowired
     private final SectorRepository sectorRepository;
-
-    public RequestPurchseServiceImpl(RequestPurchseRepository repository, UserRepository userRepository, EquipmentRepository equipmentRepository, SectorRepository sectorRepository) {
-        this.repository = repository;
-        this.userRepository = userRepository;
-        this.equipmentRepository = equipmentRepository;
-        this.sectorRepository = sectorRepository;
-    }
 
     @Override
     public List<RequestPurchseModel> findAll() {

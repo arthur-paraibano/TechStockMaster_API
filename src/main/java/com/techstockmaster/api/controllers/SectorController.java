@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 /*
  *  Classe responsável por fazer a ligação com o Usuário pelas requisições e o Serviço que faz as buscas
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/sector", produces = {"application/json"})
 @Tag(name = "Sector API", description = "API para operações relacionadas ao Setores")
@@ -31,10 +33,6 @@ public class SectorController {
 
     @Autowired
     private final SectorService service;
-
-    public SectorController(SectorService service) {
-        this.service = service;
-    }
 
     @GetMapping("/all")
     @Operation(summary = "Obter todos os Setores", description = "Retorna uma lista de todos os Setores")

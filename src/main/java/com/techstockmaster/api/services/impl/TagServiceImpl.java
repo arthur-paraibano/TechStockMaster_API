@@ -5,6 +5,7 @@ import com.techstockmaster.api.controllers.dtos.TagUpdateDto;
 import com.techstockmaster.api.domain.models.TagModel;
 import com.techstockmaster.api.domain.repositories.TagRepository;
 import com.techstockmaster.api.services.TagService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,13 @@ import java.util.Optional;
 /*
  * Aqui estão todos os métodos com conexões com o banco de dados e algumas validações
  */
+@RequiredArgsConstructor
 @Service
 public class TagServiceImpl implements TagService {
 
     // Injeção da classe UserRepository
     @Autowired
     private final TagRepository tagRepository;
-
-    public TagServiceImpl(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
 
     // Puxa tudo que existir na tabela informada no Modal
     public List<TagModel> findAll() {

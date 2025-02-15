@@ -8,6 +8,7 @@ import com.techstockmaster.api.domain.repositories.CalledTiRepository;
 import com.techstockmaster.api.domain.repositories.SectorRepository;
 import com.techstockmaster.api.domain.repositories.UserRepository;
 import com.techstockmaster.api.services.CalledTIService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class CalledTiServiceImpl implements CalledTIService {
 
@@ -26,12 +28,6 @@ public class CalledTiServiceImpl implements CalledTIService {
 
     @Autowired
     private final SectorRepository sectorRepository;
-
-    public CalledTiServiceImpl(CalledTiRepository calledTiRepository, UserRepository userRepository, SectorRepository sectorRepository) {
-        this.calledTiRepository = calledTiRepository;
-        this.userRepository = userRepository;
-        this.sectorRepository = sectorRepository;
-    }
 
     @Override
     public List<CalledTiModel> findAll() {
